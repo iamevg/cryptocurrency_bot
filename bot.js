@@ -41,7 +41,12 @@ bot.on("message", msg => {
         if (msg.chat.id) {
           bot.sendMessage(msg.chat.id, htmlMessage, {
             "parse_mode": "HTML"
-          });
+          }).catch(error => {
+            if (error . response  &&  error . response . statusCode  ===  403) {
+              clearInterval(interval);
+              console.log("Челик заблокировал бота");
+            }
+          });;
         } else {
           clearInterval(interval);
         }
