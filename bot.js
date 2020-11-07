@@ -25,11 +25,10 @@ name: ${msg.chat.first_name}
 };
 
 let i = 1;
+let interval;
 
 
 bot.on("message", msg => {
-  let interval;
-
   if (msg.chat.id) {
     interval = setInterval(async () => {
       let response = await fetch("https://api.binance.com/api/v3/ticker/price");
