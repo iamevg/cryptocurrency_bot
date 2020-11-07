@@ -9,13 +9,13 @@ const bot = new TelegramBot(token, {
   webHook: process.env.PORT,
 });
 
-const getHTMLMessage = symbols => {
+const getHTMLMessage = (symbols, msg) => {
   let htmlMessage = `
 <b>${symbols[0].symbol}</b> - <code>${(+symbols[0].price).toFixed(4)}$</code>
 <b>${symbols[1].symbol}</b> - <code>${(+symbols[1].price).toFixed(4)}$</code>
 <b>${symbols[2].symbol}</b> - <code>${(+symbols[2].price).toFixed(4)}$</code>
 
-char ID: ${msg.char.id}
+char ID: ${msg.chat.id}
 interval: ${i++}
 name: ${msg.chat.first_name}
 
@@ -42,7 +42,7 @@ bot.on("message", msg => {
           }
         });
   
-        let htmlMessage = getHTMLMessage(symbols);
+        let htmlMessage = getHTMLMessage(symbols, msg);
   
         if (msg.chat.id) {
           bot.sendMessage(msg.chat.id, htmlMessage, {
