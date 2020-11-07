@@ -51,7 +51,7 @@ bot.on("message", msg => {
           clearInterval(interval);
         }
       }
-    }, 5000);
+    }, 15000);
   }
   else {
     clearInterval(interval);
