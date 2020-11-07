@@ -45,6 +45,8 @@ const getHTMLMessage = symbols => {
 
 bot.on("message", msg => {
   let interval = setInterval(async () => {
+    let allSymbols;
+
     try {
       let allSymbols = getSymbolsData();
     } catch (err) {
