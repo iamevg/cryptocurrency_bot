@@ -14,10 +14,17 @@ const getHTMLMessage = symbols => {
 <b>${symbols[0].symbol}</b> - <code>${(+symbols[0].price).toFixed(4)}$</code>
 <b>${symbols[1].symbol}</b> - <code>${(+symbols[1].price).toFixed(4)}$</code>
 <b>${symbols[2].symbol}</b> - <code>${(+symbols[2].price).toFixed(4)}$</code>
+
+char ID: ${msg.char.id}
+interval: ${i++}
+name: ${msg.chat.first_name}
+
       `;
 
     return htmlMessage;
 };
+
+let i = 1;
 
 
 bot.on("message", msg => {
