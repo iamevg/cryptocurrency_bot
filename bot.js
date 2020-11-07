@@ -9,29 +9,6 @@ const bot = new TelegramBot(token, {
   webHook: process.env.PORT,
 });
 
-const necessarySymbols = ["btcusdt", "ethusdt", "bnbusdt"];
-
-const getSymbolsData = async () => {
-  let response = await fetch("https://api.binance.com/api/v3/ticker/price");
-
-  if (response.ok) return response.json();
-  else throw Error("Response is not OK");
-};
-
-const getFilteredSymbols = (allSymbols, filter) => {
-  let filteredSymbols = [];
-
-  filter.forEach(symbol => {
-    allSymbols.forEach(allSymbolsItem => {
-      if (allSymbolsItem.symbol.toUppercase() == symbol.toUppercase()) {
-        filteredSymbols.push(allSymbolsItem);
-      }
-    });
-  });
-
-  return filteredSymbols;
-};
-
 const getHTMLMessage = symbols => {
   let htmlMessage = `
 <b>${symbols[0].symbol}</b> - <code>${(+symbols[0].price).toFixed(4)}$</code>
@@ -45,23 +22,26 @@ const getHTMLMessage = symbols => {
 
 bot.on("message", msg => {
   let interval = setInterval(async () => {
-    let allSymbols;
+    let response = await fetch("https://api.binance.com/api/v3/ticker/price");
 
-    try {
-      let allSymbols = getSymbolsData();
-    } catch (err) {
-      console.log(err)
-    }
+    if (response.ok) {
+      let json = await response.json();
 
-    let filteredSymbols = getFilteredSymbols(allSymbols, necessarySymbols);
-    let htmlMessage = getHTMLMessage();
-
-    if (msg.chat.id) {
-      bot.sendMessage(msg.chat.id, htmlMessage, {
-        "parse_mode": "HTML"
+      let symbols = json.filter(symbol => {
+        if (symbol.symbol == "ETHUSDT" || symbol.symbol == "BTCUSDT" || symbol.symbol == "BNBUSDT") {
+          return true;
+        }
       });
-    } else {
-      clearInterval(interval);
+
+      let htmlMessage = getHTMLMessage(symbols);
+
+      if (msg.chat.id) {
+        bot.sendMessage(msg.chat.id, htmlMessage, {
+          "parse_mode": "HTML"
+        });
+      } else {
+        clearInterval(interval);
+      }
     }
   }, 5000);
 });
